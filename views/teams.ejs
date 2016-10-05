@@ -1,0 +1,21 @@
+<% include partials/header.ejs %>
+
+<h1>Teams</h1>
+
+<table class="table table-striped">
+  <tr>
+    <th>City</th>
+    <th>Nickname</th>
+    <th>Wins</th>
+    <th>Losses</th>
+  </tr>
+  <% for (var i = 0; i < teams.length; i++) { %>
+    <tr>
+      <td><%= teams[i].city %></td>
+      <td><%= teams[i].nickname %></td>
+      <td><%= teams[i].wins %></td>
+      <td><%= teams[i].losses %></td>
+    </tr>
+  <% } %>
+</table>
+<% include partials/footer.ejs %>
