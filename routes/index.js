@@ -4,8 +4,8 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', {
-    title: 'Lesson 5',
-    message: 'Starting CRUD with MongoDB'
+    title: 'Lesson 6',
+    message: 'Starting CRUD with MongoDB - Part 2'
   });
 });
 

@@ -15,10 +15,12 @@ var teamSchema = new mongoose.Schema({
         required: 'Nickname cannot be blank'
     },
     wins: {
-        type: Number
+        type: Number,
+        min: 0
     },
     losses: {
-        type: Number
+        type: Number,
+        min: 0
     }
 });
 
