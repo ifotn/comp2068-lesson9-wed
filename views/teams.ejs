@@ -8,6 +8,7 @@
     <th>Nickname</th>
     <th>Wins</th>
     <th>Losses</th>
+    <th>Edit</th>
     <th>Delete</th>
   </tr>
   <% for (var i = 0; i < teams.length; i++) { %>
@@ -16,8 +17,10 @@
       <td><%= teams[i].nickname %></td>
       <td><%= teams[i].wins %></td>
       <td><%= teams[i].losses %></td>
-      <td><a href="/teams/delete/<%= teams[i]._id %>">Delete</a></td>
+      <td><a href="/teams/<%= teams[i]._id %>">Edit</a></td>
+      <td><a href="/teams/delete/<%= teams[i]._id %>" class="confirmation">Delete</a></td>
     </tr>
   <% } %>
 </table>
+
 <% include partials/footer.ejs %>

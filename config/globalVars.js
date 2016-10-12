@@ -6,4 +6,5 @@
 // start with the db connection string
 module.exports = {
     db: 'mongodb://localhost/comp2068'
+    //db: 'mongodb://gcrfreeman2:pass@ds048319.mlab.com:48319/comp2068-wed'
 };

@@ -55,5 +55,71 @@ router.post('/add', function(req, res, next) {
     });
 });
 
+/* GET delete page */
+router.get('/delete/:id', function(req, res, next) {
+    // get the id parameter from the url
+    var id = req.params.id;
+
+    // run the delete
+    Team.remove( {
+        _id: id
+    }, function(err) {
+        if (err) {
+            console.log(err);
+            res.render('/error');
+        }
+        else {
+            res.redirect('/teams');
+        }
+    });
+});
+
+/* GET edit team page with id parameter */
+router.get('/:id', function(req, res, next) {
+
+    // look up the selected team
+    var id = req.params.id;
+
+    Team.findById(id, function(err, team) {
+        if (err) {
+            console.log(err);
+            res.render('error');
+        }
+        else {
+            // load edit team view
+            res.render('edit-team', {
+                title: 'Team Details',
+                team: team
+            });
+        }
+    });
+});
+
+/* POST - save an update */
+router.post('/:id', function(req, res, next) {
+   // get the id from the url
+    var id = req.params.id;
+
+    // create a new team object and populate it from the form values
+    var team = new Team({
+       _id: id,
+        city: req.body.city,
+        nickname: req.body.nickname,
+        wins: req.body.wins,
+        losses: req.body.losses
+    });
+
+    // try the update
+    Team.update({ _id: id }, team, function(err) {
+        if (err) {
+            console.log(err);
+            res.render('/error');
+        }
+        else {
+            res.redirect('/teams');
+        }
+    });
+});
+
 // make public
 module.exports = router;
