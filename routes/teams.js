@@ -9,7 +9,7 @@ var router = express.Router();
 var Team = require('../models/team');
 
 // GET teams home page - show list of teams
-router.get('/', function(req, res, next) {
+router.get('/', isLoggedIn, function(req, res, next) {
     // use Team model to get the list of teams from MongoDB
     Team.find(function(err, teams) {
        if (err) {
@@ -20,22 +20,24 @@ router.get('/', function(req, res, next) {
            // load teams.ejs view
            res.render('teams', {
                title: 'Playoff Teams',
-               teams: teams
+               teams: teams,
+               user: req.user
            })
        }
     });
 });
 
 /* GET /teams/add to show the empty form */
-router.get('/add', function(req, res, next) {
+router.get('/add', isLoggedIn, function(req, res, next) {
     // load the blank form
     res.render('add-team', {
-        title: 'Add a New Team'
+        title: 'Add a New Team',
+        user: req.user
     });
 });
 
 /* POST /teams/add to process the form submission */
-router.post('/add', function(req, res, next) {
+router.post('/add', isLoggedIn, function(req, res, next) {
     // use the mongoose model to add the new record
 
     Team.create( {
@@ -56,7 +58,7 @@ router.post('/add', function(req, res, next) {
 });
 
 /* GET delete page */
-router.get('/delete/:id', function(req, res, next) {
+router.get('/delete/:id', isLoggedIn, function(req, res, next) {
     // get the id parameter from the url
     var id = req.params.id;
 
@@ -75,7 +77,7 @@ router.get('/delete/:id', function(req, res, next) {
 });
 
 /* GET edit team page with id parameter */
-router.get('/:id', function(req, res, next) {
+router.get('/:id', isLoggedIn, function(req, res, next) {
 
     // look up the selected team
     var id = req.params.id;
@@ -89,14 +91,15 @@ router.get('/:id', function(req, res, next) {
             // load edit team view
             res.render('edit-team', {
                 title: 'Team Details',
-                team: team
+                team: team,
+                user: req.user
             });
         }
     });
 });
 
 /* POST - save an update */
-router.post('/:id', function(req, res, next) {
+router.post('/:id', isLoggedIn, function(req, res, next) {
    // get the id from the url
     var id = req.params.id;
 
@@ -120,6 +123,16 @@ router.post('/:id', function(req, res, next) {
         }
     });
 });
+
+// check if user is logged in
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    else {
+        res.redirect('/login');
+    }
+}
 
 // make public
 module.exports = router;

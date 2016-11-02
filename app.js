@@ -19,6 +19,31 @@ var mongoose = require('mongoose');
 var config = require('./config/globalVars');
 mongoose.connect(config.db);
 
+// passport config - add dependencies
+var session = require('express-session');
+var passport = require('passport');
+var localStrategy = require('passport-local').Strategy;
+var flash = require('connect-flash');
+app.use(flash());
+
+// enable sessions
+app.use(session({
+  secret: config.secret,
+  resave: true,
+  saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// link to the Account model which we build
+var Account = require('./models/account');
+passport.use(Account.createStrategy());
+
+// read and write the user to / from the session
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

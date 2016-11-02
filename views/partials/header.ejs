@@ -14,7 +14,17 @@
         <nav class="navbar navbar-default">
             <ul class="nav navbar-nav">
                 <li><a href="/">Home</a></li>
-                <li><a href="/teams">Teams</a></li>
+
+                <% if (user) { %>
+                    <li><a href="/teams">Teams</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                <% }
+                else { %>
+                 <li><a href="/register">Register</a></li>
+                 <li><a href="/login">Login</a></li>
+                <% } %>
+
             </ul>
+
         </nav>
 
