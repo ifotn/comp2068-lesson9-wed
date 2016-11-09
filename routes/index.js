@@ -8,8 +8,8 @@ var passport = require('passport');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', {
-    title: 'Lesson 8',
-    message: 'Authentication with Passport',
+    title: 'Lesson 9',
+    message: 'Authentication with Passport OAuth Strategies',
     user: req.user
   });
 });
@@ -41,13 +41,29 @@ router.post('/register', function(req, res, next) {
 /* GET login page. */
 router.get('/login', function(req, res, next) {
 
+  // get any messages from session
+  var messages = req.session.messages || [];
+
+  /* the above line is shorthand for this if statement below:
+  var messages;
+
+  if (req.session.messages.length > 0 ) {
+    messages = req.session.messages;
+  }
+  else {
+    messages = [];
+  } */
+
+  // clear out the session messages so they don't still show if the user leaves and comes back
+  req.session.messages = [];
+
   if (req.user) {
     res.redirect('/teams');
   }
   else {
     res.render('login', {
       'title': 'Login',
-      failureMessage: '',
+      messages: messages,
       user: req.user
     });
   }
@@ -58,7 +74,7 @@ router.post('/login', passport.authenticate('local',
     {
       successRedirect: '/teams',
       failureRedirect: '/login',
-      failureMessage: 'Invalid Login'
+      failureMessage: 'Invalid Login' // automatically stored in req.session.messages
     }
 ));
 
