@@ -12,7 +12,13 @@ var AccountSchema = new mongoose.Schema({
    },
    password: {
        type: String
-   }
+   },
+    oauthID: {
+        type: String
+    },
+    created: {
+        type: Date
+    }
 });
 
 // connect this model to passport local mongoose

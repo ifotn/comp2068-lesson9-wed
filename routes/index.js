@@ -32,7 +32,7 @@ router.post('/register', function(req, res, next) {
           res.redirect('/error');
         }
         else {
-          res.redirect('/login', { user: req.user });
+          res.redirect('/login');
         }
       }
   );
@@ -82,6 +82,28 @@ router.post('/login', passport.authenticate('local',
 router.get('/logout', function(req, res, next) {
   req.logout();
   res.redirect('/login');
+});
+
+/* GET /facebook - show fb login popup */
+router.get('/facebook', passport.authenticate('facebook'));
+
+/* GET /facebook/callback - log the user in if valid */
+router.get('/facebook/callback', passport.authenticate('facebook', {
+  failureRedirect: '/login',
+  failureMessage: 'Invalid Login'
+}), function(req, res, next) {
+    res.redirect('/teams');
+});
+
+/* GET /github - show github login popup */
+router.get('/github', passport.authenticate('github'));
+
+/* GET /github/callback - log the user in if valid */
+router.get('/github/callback', passport.authenticate('github', {
+  failureRedirect: '/login',
+  failureMessage: 'Invalid Login'
+}), function(req, res, next) {
+  res.redirect('/teams');
 });
 
 module.exports = router;

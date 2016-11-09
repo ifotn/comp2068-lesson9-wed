@@ -40,6 +40,89 @@ app.use(passport.session());
 var Account = require('./models/account');
 passport.use(Account.createStrategy());
 
+// add facebook auth
+var facebookStrategy = require('passport-facebook').Strategy;
+
+// configure facebook auth
+passport.use(new facebookStrategy({
+  clientID: config.ids.facebook.clientID,
+  clientSecret: config.ids.facebook.clientSecret,
+  callbackURL: config.ids.facebook.callbackURL
+}, function(accessToken, refreshToken, profile, cb) {
+
+      Account.findOne({ oauthID: profile.id }, function(err, user) {
+        if (err) {
+          console.log(err);
+        }
+        else {
+          if (!err && user != null) { // fb user already exists in our db
+            cb(null,  user);
+          }
+          else {
+            // create a new user from the fb profile
+            user = new Account({
+              oauthID: profile.id,
+              username: profile.displayName,
+              created: Date.now()
+            });
+
+            user.save(function(err, user) {
+              if (err) {
+                console.log(err);
+              }
+              else {
+                cb(null, user);
+              }
+            });
+          }
+        }
+      });
+      /*Account.findOrCreate({ facebookId: profile.id }, function(err, user) {
+        return cb(err, user);
+      });*/
+    }
+));
+
+// add facebook auth
+var githubStrategy = require('passport-github').Strategy;
+
+// configure facebook auth
+passport.use(new githubStrategy({
+      clientID: config.ids.github.clientID,
+      clientSecret: config.ids.github.clientSecret,
+      callbackURL: config.ids.github.callbackURL
+    }, function(accessToken, refreshToken, profile, cb) {
+
+      Account.findOne({ oauthID: profile.id }, function(err, user) {
+        if (err) {
+          console.log(err);
+        }
+        else {
+          if (!err && user != null) { // github user already exists in our db
+            cb(null,  user);
+          }
+          else {
+            // create a new user from the github profile
+            user = new Account({
+              oauthID: profile.id,
+              username: profile.username, // github uses "username" not "displayName" like fb
+              created: Date.now()
+            });
+
+            user.save(function(err, user) {
+              if (err) {
+                console.log(err);
+              }
+              else {
+                cb(null, user);
+              }
+            });
+          }
+        }
+      });
+    }
+));
+
 // read and write the user to / from the session
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
